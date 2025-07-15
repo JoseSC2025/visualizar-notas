@@ -1,6 +1,8 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
+import pytz
+
 
 EXCEL_FILE = 'estudiantes.xlsx'
 
@@ -90,7 +92,10 @@ def app():
         mostrar_tabla_notas(fila)
 
         st.markdown("### 💬 Sigamos estudiando . . .")
-        st.markdown(f"🕒 Fecha y hora de acceso: `{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}`")
+        zona_lima = pytz.timezone("America/Lima")
+        hora_lima = datetime.now(zona_lima).strftime('%Y-%m-%d %H:%M:%S')
+        st.markdown(f"🕒 Fecha y hora de acceso (Lima, Perú): `{hora_lima}`")
+
 
         if st.button("Salir"):
             st.session_state.estado = 'login'
