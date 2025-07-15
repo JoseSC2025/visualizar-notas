@@ -1,26 +1,30 @@
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-import os
 
 EXCEL_FILE = 'estudiantes.xlsx'
 
 def cargar_datos():
-    return pd.read_excel(EXCEL_FILE)
+    return pd.read_excel(EXCEL_FILE, dtype={'Código de matrícula': str, 'DNI': str})
 
 def guardar_datos(df):
     df.to_excel(EXCEL_FILE, index=False)
 
 def verificar_credenciales(df, codigo, contrasena):
-    fila = df[df['Código de matrícula'] == codigo]
-    if fila.empty:
+    fila_df = df[df['Código de matrícula'].str.strip() == codigo.strip()]
+    if fila_df.empty:
         return False, None
-    fila = fila.iloc[0]
-    if pd.isna(fila['contraseña nueva']):  # Primer ingreso
-        if str(fila['DNI']) == contrasena:
+    fila = fila_df.iloc[0]
+
+    dni_guardado = str(fila['DNI']).strip()
+    nueva_contra = str(fila['contraseña nueva']).strip() if pd.notna(fila['contraseña nueva']) else ""
+
+    if nueva_contra == "" or nueva_contra.lower() == 'nan':  # Primer ingreso
+        if dni_guardado == contrasena.strip():
             return True, fila
-    elif str(fila['contraseña nueva']) == contrasena:
+    elif nueva_contra == contrasena.strip():
         return True, fila
+
     return False, None
 
 def actualizar_ingresos(df, codigo):
@@ -65,7 +69,7 @@ def app():
 
         acceso, fila = verificar_credenciales(df, codigo, contrasena)
         if acceso:
-            if pd.isna(fila['contraseña nueva']):
+            if str(fila['contraseña nueva']).strip().lower() in ["", "nan"]:
                 st.info("Primer ingreso detectado. Por favor, defina una nueva contraseña.")
                 nueva_contra = st.text_input("Nueva contraseña", type="password")
                 confirmar = st.text_input("Confirmar nueva contraseña", type="password")
@@ -92,4 +96,3 @@ def app():
 
 if __name__ == "__main__":
     app()
-
