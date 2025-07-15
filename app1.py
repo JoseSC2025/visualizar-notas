@@ -45,7 +45,7 @@ def mostrar_tabla_notas(fila):
         "Notas": notas
     })
 
-    st.markdown("<h4 style='text-align: center;'>Notas del curso</h4>", unsafe_allow_html=True)
+#    st.markdown("<h4 style='text-align: center;'>Notas del curso</h4>", unsafe_allow_html=True)
     styled_table = df_notas.style.set_properties(**{
         'text-align': 'center',
         'background-color': '#f0f8ff',
