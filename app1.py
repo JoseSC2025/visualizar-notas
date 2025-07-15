@@ -55,38 +55,33 @@ def mostrar_tabla_notas(fila):
 
 def app():
     st.set_page_config(page_title="Visualizar Notas de Física General 2025-1", page_icon="📘")
-
-    # Forzar reinicio visual si está marcado
-    if st.session_state.get("rerun_pendiente", False):
-        st.session_state.rerun_pendiente = False
-        st.experimental_rerun()
-
     st.title("📘 Visualizar Notas de Física General 2025-1")
 
-    if 'autenticado' not in st.session_state:
-        st.session_state.autenticado = False
+    # Inicializar variables de sesión si no existen
+    if 'estado' not in st.session_state:
+        st.session_state.estado = 'login'  # o 'mostrando'
+    if 'fila' not in st.session_state:
+        st.session_state.fila = None
 
     df = cargar_datos()
 
-    if not st.session_state.autenticado:
-        codigo = st.text_input("Ingrese su Código de Matrícula (8 caracteres)", key='codigo')
-        dni = st.text_input("Ingrese su DNI", type="password", key='dni')
+    if st.session_state.estado == 'login':
+        codigo = st.text_input("Ingrese su Código de Matrícula (8 caracteres)")
+        dni = st.text_input("Ingrese su DNI", type="password")
 
         if st.button("Ingresar"):
             if len(codigo.strip()) != 8:
                 st.error("El código debe tener 8 caracteres.")
-                return
-
-            acceso, fila = verificar_credenciales(df, codigo, dni)
-            if acceso:
-                actualizar_ingresos(df, codigo)
-                st.session_state.autenticado = True
-                st.session_state.fila = fila
-                st.success("Ingreso exitoso.")
-                st.session_state.rerun_pendiente = True
             else:
-                st.error("Código de matrícula o DNI incorrectos.")
-    else:
+                acceso, fila = verificar_credenciales(df, codigo, dni)
+                if acceso:
+                    actualizar_ingresos(df, codigo)
+                    st.session_state.fila = fila
+                    st.session_state.estado = 'mostrando'
+                else:
+                    st.error("Código de matrícula o DNI incorrectos.")
+
+    elif st.session_state.estado == 'mostrando':
         fila = st.session_state.fila
         st.subheader(f"{fila['Apellidos y Nombre']}")
         mostrar_tabla_notas(fila)
@@ -95,8 +90,9 @@ def app():
         st.markdown(f"🕒 Fecha y hora de acceso: `{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}`")
 
         if st.button("Salir"):
-            st.session_state.clear()
-            st.session_state.rerun_pendiente = True
+            st.session_state.estado = 'login'
+            st.session_state.fila = None
+            # No usamos experimental_rerun: dejamos que Streamlit rerenderice naturalmente
 
 if __name__ == "__main__":
     app()
