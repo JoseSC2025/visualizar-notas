@@ -28,7 +28,7 @@ def actualizar_ingresos(df, codigo):
 def mostrar_tabla_notas(fila):
     actividades = [
         "Examen parcial", "Examen Final", "Exposición Grupal",
-        "Cuestionarios", "Participación en clase (2%)\nResponsabilidad y puntualidad (3%)",
+        "Cuestionarios", "Participación (2%)\nAsistencia (3%)",
         "Laboratorio"
     ]
     ponderaciones = ["30 %", "30 %", "10 %", "5 %", "5 %", "20 %"]
@@ -62,7 +62,7 @@ def app():
             actualizar_ingresos(df, codigo)
             st.success("Bienvenido/a. Acceso exitoso.")
             st.subheader(f"{fila['Apellidos y Nombre']}")
-            st.write(f"**Código de Matrícula:** {codigo}")
+#            st.write(f"**Código de Matrícula:** {codigo}")
             mostrar_tabla_notas(fila)
 
             st.markdown("### 💬 Sigamos estudiando 💪")
