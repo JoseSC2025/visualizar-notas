@@ -28,7 +28,7 @@ def actualizar_ingresos(df, codigo):
 def mostrar_tabla_notas(fila):
     actividades = [
         "Examen parcial", "Examen Final", "Exposición Grupal",
-        "Cuestionarios", "Participación (2%),\nAsistencia (3%)",
+        "Cuestionarios", "Participación en clase (2%)\nResponsabilidad y puntualidad (3%)",
         "Laboratorio"
     ]
     ponderaciones = ["30 %", "30 %", "10 %", "5 %", "5 %", "20 %"]
@@ -47,46 +47,31 @@ def app():
     st.set_page_config(page_title="Visualizar Notas de Física General", page_icon="📘")
     st.title("📘 Visualizar Notas de Física General")
 
-    # Ejecuta rerun si fue marcado previamente
-    if st.session_state.get("rerun_pendiente", False):
-        st.session_state.rerun_pendiente = False
-        st.experimental_rerun()
-
-    if 'autenticado' not in st.session_state:
-        st.session_state.autenticado = False
-
     df = cargar_datos()
 
-    if not st.session_state.autenticado:
-        codigo = st.text_input("Ingrese su Código de Matrícula", key='codigo')
-        dni = st.text_input("Ingrese su DNI", type="password", key='dni')
+    codigo = st.text_input("Ingrese su Código de Matrícula (8 caracteres)")
+    dni = st.text_input("Ingrese su DNI", type="password")
 
-        if st.button("Ingresar"):
-            if len(codigo.strip()) != 8:
-                st.error("El código debe tener 8 caracteres.")
-                return
+    if st.button("Ingresar"):
+        if len(codigo.strip()) != 8:
+            st.error("El código debe tener 8 caracteres.")
+            return
 
-            acceso, fila = verificar_credenciales(df, codigo, dni)
-            if acceso:
-                actualizar_ingresos(df, codigo)
-                st.session_state.autenticado = True
-                st.session_state.fila = fila
-                st.success("Bienvenido/a. Acceso exitoso.")
-                st.session_state.rerun_pendiente = True  # Marca que se debe hacer rerun en el próximo ciclo
-            else:
-                st.error("Código o DNI incorrecto.")
-    else:
-        fila = st.session_state.fila
-        st.subheader(f"{fila['Apellidos y Nombre']}")
-#        st.write(f"**Código de Matrícula:** {fila['Código de matrícula']}")
-        mostrar_tabla_notas(fila)
+        acceso, fila = verificar_credenciales(df, codigo, dni)
+        if acceso:
+            actualizar_ingresos(df, codigo)
+            st.success("Bienvenido/a. Acceso exitoso.")
+            st.subheader(f"{fila['Apellidos y Nombre']}")
+            st.write(f"**Código de Matrícula:** {codigo}")
+            mostrar_tabla_notas(fila)
 
-        st.markdown("### 💬 Sigamos estudiando 💪")
-        st.markdown(f"🕒 Fecha y hora de acceso: `{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}`")
+            st.markdown("### 💬 Sigamos estudiando 💪")
+            st.markdown(f"🕒 Fecha y hora de acceso: `{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}`")
 
-        if st.button("Salir"):
-            st.session_state.clear()
-            st.session_state.rerun_pendiente = True  # Forzar reinicio visual
+            if st.button("Salir"):
+                st.experimental_rerun()
+        else:
+            st.error("Código o DNI incorrecto.")
 
 if __name__ == "__main__":
     app()
