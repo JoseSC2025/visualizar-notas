@@ -35,13 +35,16 @@ def mostrar_tabla_notas(fila):
         fila['Nota 1'], fila['Nota 2'], fila['Nota 3'],
         fila['Nota 4'], fila['Nota 5'], fila['Nota 6']
     ]
+
+    # Convertir a enteros para evitar decimales como 16.0
+    notas = [int(nota) if not pd.isna(nota) else "" for nota in notas]
+
     df_notas = pd.DataFrame({
         "Actividades": actividades,
         "Ponderación": ponderaciones,
         "Notas": notas
     })
 
-    # Estilo
     st.markdown("<h4 style='text-align: center;'>Notas del curso</h4>", unsafe_allow_html=True)
     styled_table = df_notas.style.set_properties(**{
         'text-align': 'center',
