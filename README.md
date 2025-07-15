@@ -4,8 +4,7 @@ Aplicación en Streamlit que permite a estudiantes consultar sus notas de forma 
 
 ## Características
 
-- Ingreso con código de matrícula (8 caracteres) y contraseña (DNI en primer acceso).
-- Cambio de contraseña en el primer acceso.
+- Ingreso con código de matrícula (8 caracteres) y contraseña (DNI).
 - Validación con archivo Excel.
 - Visualización de notas con ponderación.
 - Registro de número de ingresos.
@@ -14,4 +13,4 @@ Aplicación en Streamlit que permite a estudiantes consultar sus notas de forma 
 ## Archivo de datos
 
 El archivo `estudiantes.xlsx` debe tener las siguientes columnas:
-Código de matrícula | DNI | Apellidos y Nombre | Nota 1 | Nota 2 | Nota 3 | Nota 4 | Nota 5 | Nota 6 | Nota 7 | contraseña nueva | Ingresos
+Código de matrícula | DNI | Apellidos y Nombre | Nota 1 | Nota 2 | Nota 3 | Nota 4 | Nota 5 | Nota 6 | Nota 7 | Ingresos
