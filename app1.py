@@ -39,8 +39,10 @@ def mostrar_tabla_notas(fila):
     ]
 
     # Convertir a enteros para evitar decimales como 16.0
-    notas = [int(nota) if not pd.isna(nota) else "" for nota in notas]
-
+#    notas = [int(nota) if not pd.isna(nota) else "" for nota in notas]
+    # Para que las notas se vean con un decimal (por ejemplo: 15.3 en lugar de 15)
+    notas = [f"{nota:.1f}" if not pd.isna(nota) else "" for nota in notas]
+    
     df_notas = pd.DataFrame({
         "Actividades": actividades,
         "Ponderación": ponderaciones,
