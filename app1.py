@@ -30,7 +30,7 @@ def actualizar_ingresos(df, codigo):
 def mostrar_tabla_notas(fila):
     actividades = [
         "Examen Parcial", "Examen Final", "Exposición Grupal",
-        "Cuestionarios", "Participación (3%), Asistencia (2%)", "Laboratorio"
+        "Cuestionarios", "Participación (3 %) + Asistencia (2 %)", "Laboratorio"
     ]
     ponderaciones = ["30 %", "30 %", "10 %", "5 %", "5 %", "20 %"]
     notas = [
